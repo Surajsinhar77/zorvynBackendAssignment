@@ -69,18 +69,19 @@ export const getCategoryTotals = async ({ type } = {}) => {
 };
 
 export const getMonthlyTrends = async ({ year } = {}) => {
-  const currentYear = year || new Date().getFullYear();
+  const matchStage = { isDeleted: false };
+
+  // If a specific year is requested, filter to that year only.
+  // Without a year param, return trends across all available data.
+  if (year) {
+    matchStage.date = {
+      $gte: new Date(`${year}-01-01`),
+      $lte: new Date(`${year}-12-31T23:59:59.999Z`),
+    };
+  }
 
   return Transaction.aggregate([
-    {
-      $match: {
-        isDeleted: false,
-        date: {
-          $gte: new Date(`${currentYear}-01-01`),
-          $lte: new Date(`${currentYear}-12-31`),
-        },
-      },
-    },
+    { $match: matchStage },
     {
       $group: {
         _id: {

@@ -24,7 +24,7 @@ export const getMonthlyTrends = asyncHandler(async (req, res) => {
   const trends = await dashboardService.getMonthlyTrends({ year });
 
   res.status(200).json(
-    new ApiResponse(200, { year: year || new Date().getFullYear(), trends }, 'Monthly trends fetched successfully.')
+    new ApiResponse(200, { year: year ? Number(year) : 'all', trends }, 'Monthly trends fetched successfully.')
   );
 });
 
