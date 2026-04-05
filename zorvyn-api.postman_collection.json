@@ -1,0 +1,394 @@
+{
+  "info": {
+    "name": "Zorvyn Backend API",
+    "_postman_id": "zorvyn-backend-api",
+    "description": "API collection for Zorvyn Backend Assignment. Base URL: {{baseUrl}} (default: http://localhost:3000). Set the `token` variable after login.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"secret123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.token) { pm.collectionVariables.set('token', res.token); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"secret123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get Me",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "me"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users (Admin only)",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users"]
+            }
+          }
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Jane Smith\",\n  \"email\": \"jane@example.com\",\n  \"password\": \"secret123\",\n  \"role\": \"analyst\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users"]
+            }
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", ":id"],
+              "variable": [
+                { "key": "id", "value": "<mongoId>" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Jane Updated\",\n  \"email\": \"jane.updated@example.com\",\n  \"role\": \"viewer\",\n  \"status\": \"active\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", ":id"],
+              "variable": [
+                { "key": "id", "value": "<mongoId>" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", ":id"],
+              "variable": [
+                { "key": "id", "value": "<mongoId>" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Toggle User Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/:id/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", ":id", "status"],
+              "variable": [
+                { "key": "id", "value": "<mongoId>" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Transactions",
+      "item": [
+        {
+          "name": "Get All Transactions",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/transactions?type=income&category=salary&startDate=2026-01-01&endDate=2026-12-31&page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "transactions"],
+              "query": [
+                { "key": "type", "value": "income", "description": "Filter: income | expense", "disabled": true },
+                { "key": "category", "value": "salary", "description": "Filter: salary | freelance | investment | rent | utilities | groceries | entertainment | healthcare | transport | education | other", "disabled": true },
+                { "key": "startDate", "value": "2026-01-01", "description": "ISO 8601 date", "disabled": true },
+                { "key": "endDate", "value": "2026-12-31", "description": "ISO 8601 date", "disabled": true },
+                { "key": "page", "value": "1", "disabled": true },
+                { "key": "limit", "value": "10", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Transaction by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/transactions/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "transactions", ":id"],
+              "variable": [
+                { "key": "id", "value": "<mongoId>" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Transaction (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 5000,\n  \"type\": \"income\",\n  \"category\": \"salary\",\n  \"date\": \"2026-04-05T00:00:00.000Z\",\n  \"notes\": \"Monthly salary\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/transactions",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "transactions"]
+            }
+          }
+        },
+        {
+          "name": "Update Transaction (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 5500,\n  \"type\": \"income\",\n  \"category\": \"freelance\",\n  \"date\": \"2026-04-05T00:00:00.000Z\",\n  \"notes\": \"Updated freelance payment\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/transactions/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "transactions", ":id"],
+              "variable": [
+                { "key": "id", "value": "<mongoId>" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Transaction (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/transactions/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "transactions", ":id"],
+              "variable": [
+                { "key": "id", "value": "<mongoId>" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "item": [
+        {
+          "name": "Recent Activity (viewer+)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard/recent",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "dashboard", "recent"]
+            }
+          }
+        },
+        {
+          "name": "Summary (analyst+)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard/summary",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "dashboard", "summary"]
+            }
+          }
+        },
+        {
+          "name": "Category Totals (analyst+)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard/categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "dashboard", "categories"]
+            }
+          }
+        },
+        {
+          "name": "Monthly Trends (analyst+)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard/trends/monthly",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "dashboard", "trends", "monthly"]
+            }
+          }
+        },
+        {
+          "name": "Weekly Trends (analyst+)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard/trends/weekly",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "dashboard", "trends", "weekly"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
